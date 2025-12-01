@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Event Ease</title>
+    <style>
+        * 
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body
+         {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f0;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            padding: 15px 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo img {
+            width: 60px;
+            height: auto;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b9d;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 5px 15px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 150px;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Cart Section */
+        .cart-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 50px;
+        }
+
+        .cart-header {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .cart-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .cart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .cart-items {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .item-details p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .item-quantity button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .item-quantity input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .item-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6b9d;
+            width: 100px;
+            text-align: right;
+        }
+
+        .remove-btn {
+            background-color: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .remove-btn:hover {
+            background-color: #ff5578;
+        }
+
+        .cart-summary {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .cart-summary h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 18px;
+            border-top: 2px solid #eee;
+            padding-top: 15px;
+            color: #ff6b9d;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff6b9d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #ff5578;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        .empty-cart h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #ff6b9d;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .continue-shopping:hover {
+            background-color: #ff5578;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #ffc0cb;
+            padding: 40px 50px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-logo img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .footer-section p {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            overflow: hidden;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .social-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="packages.html">Packages</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="logo">
+                <img src="logo.png" alt="Event Ease Logo">
+            </div>
+            <div class="header-icons">
+                <a href="login.html"><img src="account.png" alt="User Login" class="icon"></a>
+                <a href="cart.html"><img src="wishlist.png" alt="Cart" class="icon"></a>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <button><img src="search.png" alt="Search" style="width: 20px; height: 20px;"></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+  
+    <div class="cart-section">
+        <div class="cart-header">
+            <h1>Shopping Cart</h1>
+        </div>
+
+        <div class="cart-container">
+            <div class="cart-items">
+                <div class="cart-item">
+                    <img src="b1.jpg" alt="Grand Gala Package" class="item-image">
+                    <div class="item-details">
+                        <h3>Grand Gala (Luxury Package)</h3>
+                        <p>Premium event planning package with full catering and decorations</p>
+                        <div class="item-quantity">
+                            <button>-</button>
+                            <input type="number" value="1" min="1">
+                            <button>+</button>
+                        </div>
+                    </div>
+                    <div class="item-price">Rs. 25,000</div>
+                    <button class="remove-btn">Remove</button>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>Rs. 25,000</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax:</span>
+                    <span>Rs. 2,500</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span>Rs. 27,500</span>
+                </div>
+                <a href="checkout.html"><button class="checkout-btn">Proceed to Checkout</button></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="logo.png" alt="Event Ease Logo">
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#faqs">FAQS</a></li>
+                    <li><a href="#terms">Terms & Condition</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>info@eventease.com</p>
+                <p>+92 3428416192</p>
+                <p>Fast University Islamabad</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <img src="instagram.png" alt="Instagram">
+                    </a>
+                    <a href="#" class="social-icon">
+                        <img src="youtube.png" alt="Facebook">
+                    </a>
+                    <a href="#" class="social-icon">
+                        <img src="x.png" alt="X (Twitter)">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
